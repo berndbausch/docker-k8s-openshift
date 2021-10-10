@@ -1,0 +1,71 @@
+- A Centos 8 Desktop is required.
+- Podman and Buildah exist. Learner installs Skopeo.
+- Run sudo visudo and add /usr/local/bin to secure_path. Enable password-
+  less sudo for the wheel group.
+
+- Install Codeready Containers and download the pull secret.
+  Copy the crc tool to /usr/local/bin.
+  As normal user, run crc setup followed by crc start (pull secrect required).
+  Count 3 minutes altogether.
+  Copy the last few lines of the crc start output to a file crc-access. The 
+  kubeadmin password is particularly important.
+  The SSH key for logging onto the CRC VM is ~/.crc/machines/crc/id_ecdsa.
+
+- Install virt-manager
+- Download the smallest Centos 8 ISO and use it to create a VM with 4G RAM, 
+  30G disk.
+  Use simple partition setup (no LVM), install the most basic OS, set 
+  IP Address to 192.168.122.21, create a user student, set both root and student
+  passwords to pw.
+
+- Create a simple NFS server on the Desktop.
+     $ sudo mkdir /srv/volumes
+     $ sudo chmod 777 /srv/volumes
+     $ echo "/srv/volumes     *(rw)" | sudo tee -a /etc/exports
+     $ cat /etc/exports
+     $ sudo exportfs -va
+     $ sudo systemctl enable nfs-server --now
+
+- Install and start minikube.
+- Install kubectl.
+
+- Create an identity with ssh-keygen. Create .ssh/config with this content:
+    host 192.168.122.21
+        user student
+    host 192.168.130.11
+        user core
+        IdentityFile $HOME/.crc/machines/crc/id_ecdsa
+- Use ssh-copy-id to copy the new identity to the Centos 8 VM.
+
+- Log on to the Centos 8 VM and install Docker.
+
+- Log on to the CRC VM and modify the crio-wipe service. This is necessary
+  so that the CRC VM survives rebooting after an unclean shutdown.
+  Create /etc/systemd/system/crio-wipe.service with this content:
+#--------------------------------------------------------------------------
+# Unfortunately, CRI-O wipes its storage when starting after an unclean
+# shutdown. This renders the CRC VM useless e.g. when the host reboots.
+# As a workaround, this service is replaced by /bin/true.
+# Original service at 
+# /usr/lib/systemd/system/crio-wipe.service
+[Unit]
+Description=CRI-O Auto Update Script
+Before=crio.service
+RequiresMountsFor=/var/lib/containers
+
+[Service]
+EnvironmentFile=-/etc/sysconfig/crio
+ExecStart=/bin/true
+
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target
+#--------------------------------------------------------------------------
+  Run sudo systemctl daemon-reload and test it with systemctl cat crio-wipe.
+
+- Stop all virtual machines: 
+  - crc stop
+  - minikube stop
+  - sudo virsh shutdown c8-docker
+

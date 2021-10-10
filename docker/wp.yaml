@@ -1,0 +1,30 @@
+services:
+
+  wordpress:
+    image: wordpress
+    restart: always
+    ports:
+      - 8000:80
+    environment:
+      WORDPRESS_DB_HOST: wpdb
+      WORDPRESS_DB_USER: wpuser
+      WORDPRESS_DB_PASSWORD: pw
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - wordpress:/var/www/html
+
+  wpdb:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wpuser
+      MYSQL_PASSWORD: pw
+      MYSQL_ROOT_PASSWORD: pw
+    volumes:
+      - db:/var/lib/mysql
+
+volumes:
+  wordpress:
+  db:
+

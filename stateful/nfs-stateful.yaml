@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nginx-statefulset
+spec:
+  selector:
+    matchLabels:
+      name: nginx-statefulset
+  serviceName: nginx-statefulset
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        name: nginx-statefulset
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: nginx-statefulset
+        image: nginx
+        ports:
+        - containerPort: 80
+          name: "web"
+        volumeMounts:
+        - name: db-data
+          mountPath: /var/www
+  volumeClaimTemplates:
+  - metadata:
+      name: db-data
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      resources:
+        requests:
+          storage: 1Gi

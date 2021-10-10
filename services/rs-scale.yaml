@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: mypods
+  labels:
+    app: mynginxapp
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      name: nginx    # MUST match pod label below
+  template:
+    # copy pod metadata and spec here
+    metadata:
+      name: nginxpod
+      labels:
+        name: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        volumeMounts:
+        - name: website
+          mountPath: /usr/share/nginx/html
+        resources:
+          limits:
+            cpu: 250m    # Each pod gets a quarter of a CPU max
+      volumes:
+      - name: website
+        emptyDir: 

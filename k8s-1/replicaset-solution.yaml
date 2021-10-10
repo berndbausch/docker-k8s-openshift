@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: mypods
+  labels:
+    app: mynginxapp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      name: nginx    # MUST match pod label below
+  template:
+    # copy pod metadata and spec here
+    metadata:
+      name: nginxpod
+      labels:
+        name: nginx
+    spec:
+      imagePullSecrets:
+      - name: regcred
+      containers:
+      - name: nginx
+        image: nginx
+        volumeMounts:
+        - name: website
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: website
+        emptyDir: 

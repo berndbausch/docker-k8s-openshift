@@ -1,0 +1,10 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginx-clusterip
+spec:
+  ports:
+    - port: 80
+      ClusterIP: 30000
+  selector:
+    name: nginx

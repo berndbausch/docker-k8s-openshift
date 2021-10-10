@@ -1,0 +1,13 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: mypods
+  labels:
+    app: mynginxapp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      name: nginx    # MUST match pod label below
+  template:
+    # copy pod metadata and spec here
