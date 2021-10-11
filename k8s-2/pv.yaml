@@ -9,6 +9,6 @@ spec:
   capacity:
     storage: 2Gi
   accessModes:
-    - ReadWriteOnce
+    - ReadOnlyMany
   hostPath:
-    path: "/data"
+    path: "/data/website"

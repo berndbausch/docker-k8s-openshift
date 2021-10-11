@@ -1,4 +1,0 @@
-NAME                           READY   STATUS    RESTARTS   AGE
-rollingpods-57944cc687-52dkc   1/1     Running   0          49s
-rollingpods-57944cc687-csshx   1/1     Running   0          49s
-rollingpods-57944cc687-s4t8w   1/1     Running   0          49s
