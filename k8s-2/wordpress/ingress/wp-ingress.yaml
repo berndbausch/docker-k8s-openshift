@@ -3,13 +3,13 @@ kind: Ingress
 metadata:
   name: wp-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - host: wpsite.com
+  - host: wpsite.local
     http:
       paths:
-      - path: /myblog
+      - path: /
         pathType: Prefix
         backend:
           service:
