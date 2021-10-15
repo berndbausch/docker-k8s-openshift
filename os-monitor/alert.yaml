@@ -1,0 +1,13 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  namespace: devproject
+  name: testapp-cpu-rule
+spec:
+  groups:
+  - name: testapp-high-cpu-rule
+    rules:
+    - alert: pod_high_cpu
+      expr: pod:container_cpu_usage:sum{name="testapp"}>50
+      labels:
+        severity: critical
